@@ -46,6 +46,18 @@ public class PlaywrightFactory {
 	public Page initBrowser(Properties prop) {
 
 		String browserName = prop.getProperty("browser").trim();
+		
+		String headlessModeStr = prop.getProperty("headless").trim();
+		
+		boolean headlessModeVal=true;
+		
+		if( headlessModeStr.equalsIgnoreCase("false")){
+			
+			headlessModeVal=false;
+		}
+		
+		
+		
 		System.out.println("browser name is : " + browserName);
 
 		// playwright = Playwright.create();
@@ -53,21 +65,21 @@ public class PlaywrightFactory {
 
 		switch (browserName.toLowerCase()) {
 		case "chromium":
-			tlBrowser.set(getPlaywright().chromium().launch(new BrowserType.LaunchOptions().setHeadless(false)));
+			tlBrowser.set(getPlaywright().chromium().launch(new BrowserType.LaunchOptions().setHeadless(headlessModeVal)));
 			break;
 		case "firefox":
-			tlBrowser.set(getPlaywright().firefox().launch(new BrowserType.LaunchOptions().setHeadless(false)));
+			tlBrowser.set(getPlaywright().firefox().launch(new BrowserType.LaunchOptions().setHeadless(headlessModeVal)));
 			break;
 		case "safari":
-			tlBrowser.set(getPlaywright().webkit().launch(new BrowserType.LaunchOptions().setHeadless(false)));
+			tlBrowser.set(getPlaywright().webkit().launch(new BrowserType.LaunchOptions().setHeadless(headlessModeVal)));
 			break;
 		case "chrome":
 			tlBrowser.set(
-					getPlaywright().chromium().launch(new LaunchOptions().setChannel("chrome").setHeadless(false)));
+					getPlaywright().chromium().launch(new LaunchOptions().setChannel("chrome").setHeadless(headlessModeVal)));
 			break;
 		case "edge":
 			tlBrowser.set(
-					getPlaywright().chromium().launch(new LaunchOptions().setChannel("msedge").setHeadless(false)));
+					getPlaywright().chromium().launch(new LaunchOptions().setChannel("msedge").setHeadless(headlessModeVal)));
 			break;	
 
 		default:
@@ -88,9 +100,18 @@ public class PlaywrightFactory {
 	public Properties init_prop() {
 
 		try {
-			FileInputStream ip = new FileInputStream("./src/test/resources/config/config.properties");
+			FileInputStream configFis = new FileInputStream("./src/test/resources/config/config.properties");
 			prop = new Properties();
-			prop.load(ip);
+			prop.load(configFis);
+			String env = prop.getProperty("env");
+			if (env==null)
+				env ="QA";
+			FileInputStream envFis = new FileInputStream("./src/test/resources/env/"+ env.toUpperCase() + ".properties");
+			prop.load(envFis);
+			
+			
+			
+			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

@@ -22,12 +22,8 @@ public class BaseTest {
 
 		prop = pf.init_prop();
 
-		
-			prop.getProperty("browser");
-		
-
 		page = pf.initBrowser(prop);
-		
+
 	}
 
 	@AfterTest
