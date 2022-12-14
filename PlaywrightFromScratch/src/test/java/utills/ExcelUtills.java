@@ -9,13 +9,14 @@ import org.apache.poi.xssf.usermodel.*;
 public class ExcelUtills {
 	private XSSFSheet ExcelWSheet;
 	private XSSFWorkbook ExcelWBook;
+	private FileInputStream ExcelFile;
 
 	// Constructor to connect to the Excel with sheetname and Path
-	public void Excelutils(String Path, String SheetName) throws Exception {
+	public ExcelUtills(String Path, String SheetName) throws Exception {
 
 		try {
 			// Open the Excel file
-			FileInputStream ExcelFile = new FileInputStream(Path);
+			ExcelFile = new FileInputStream(Path);
 
 			// Access the required test data sheet
 			ExcelWBook = new XSSFWorkbook(ExcelFile);
@@ -40,7 +41,7 @@ public class ExcelUtills {
 
 		try {
 			String CellData = ExcelWSheet.getRow(RowNum).getCell(ColNum).getStringCellValue();
-			System.out.println("The value of CellData " + CellData);
+			//System.out.println("The value of CellData " + CellData);
 			return CellData;
 		} catch (Exception e) {
 			return "Errors in Getting Cell Data";
@@ -52,32 +53,23 @@ public class ExcelUtills {
 
 		try {
 			double CellData = ExcelWSheet.getRow(RowNum).getCell(ColNum).getNumericCellValue();
-			System.out.println("The value of CellData " + CellData);
+			//System.out.println("The value of CellData " + CellData);
 			return CellData;
 		} catch (Exception e) {
 			return 000.00;
 		}
 	}
 
-	public Object[][] getTableArray(String Path, String SheetName) throws Exception {
+	public Object[][] getTableArray() throws Exception
 
+	{
 		String[][] tabArray = null;
 
 		try {
 
-			FileInputStream ExcelFile = new FileInputStream(Path);
+			int startRow = 2;
 
-			// Access the required test data sheet
-
-			ExcelWBook = new XSSFWorkbook(ExcelFile);
-
-			ExcelWSheet = ExcelWBook.getSheet(SheetName);
-
-			int startRow = 1;
-
-			int startCol = 1;
-
-			int ci, cj;
+			int startCol = 0;
 
 			int totalRows = ExcelWSheet.getLastRowNum();
 
@@ -85,17 +77,13 @@ public class ExcelUtills {
 
 			tabArray = new String[totalRows][totalCols];
 
-			ci = 0;
+			for (int i = startRow - 1; i <= totalRows; i++) {
 
-			for (int i = startRow; i <= totalRows; i++, ci++) {
+				for (int j = startCol; j < totalCols; j++) {
 
-				cj = 0;
+					tabArray[i - 1][j] = getCellDataasstring(i, j);
 
-				for (int j = startCol; j <= totalCols; j++, cj++) {
-
-					tabArray[ci][cj] = getCellDataasstring(i, j);
-
-					System.out.println(tabArray[ci][cj]);
+					//System.out.println(tabArray[startRow - 1][startCol]);
 
 				}
 
@@ -117,6 +105,70 @@ public class ExcelUtills {
 
 			e.printStackTrace();
 
+		} finally {
+			ExcelWBook.close();
+			ExcelFile.close();
+		}
+
+		return (tabArray);
+
+	}
+
+	public Object[][] getTableArray(String Path, String SheetName) throws Exception {
+
+		String[][] tabArray = null;
+
+		try {
+
+			ExcelFile = new FileInputStream(Path);
+
+			// Access the required test data sheet
+
+			ExcelWBook = new XSSFWorkbook(ExcelFile);
+
+			ExcelWSheet = ExcelWBook.getSheet(SheetName);
+
+			int startRow = 2;
+
+			int startCol = 0;
+
+			int totalRows = ExcelWSheet.getLastRowNum();
+
+			int totalCols = ExcelWSheet.getRow(0).getLastCellNum();
+
+			tabArray = new String[totalRows][totalCols];
+
+			for (int i = startRow - 1; i <= totalRows; i++) {
+
+				for (int j = startCol; j < totalCols; j++) {
+
+					tabArray[i - 1][j] = getCellDataasstring(i, j);
+
+					System.out.println(tabArray[startRow - 1][startCol]);
+
+				}
+
+			}
+
+		}
+
+		catch (FileNotFoundException e) {
+
+			System.out.println("Could not read the Excel sheet");
+
+			e.printStackTrace();
+
+		}
+
+		catch (IOException e) {
+
+			System.out.println("Could not read the Excel sheet");
+
+			e.printStackTrace();
+
+		} finally {
+			ExcelWBook.close();
+			ExcelFile.close();
 		}
 
 		return (tabArray);

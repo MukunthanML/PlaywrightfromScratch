@@ -7,7 +7,7 @@
         <methods>
           <include name="setup"/>
           <include name="tearDown"/>
-          <include name="loginPageNavigationTest"/>
+          <include name="loginPageNavigationTestWithExcel" invocation-numbers="1"/>
         </methods>
       </class> <!-- tests.LoginPageTest -->
     </classes>
