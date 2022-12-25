@@ -14,6 +14,8 @@ import com.microsoft.playwright.BrowserType.LaunchOptions;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 
+import utills.PropertyUtills;
+
 public class PlaywrightFactory {
 
 	Playwright playwright;
@@ -21,6 +23,7 @@ public class PlaywrightFactory {
 	BrowserContext browserContext;
 	Page page;
 	Properties prop;
+	PropertyUtills propertyUtills = new PropertyUtills();;
 
 	private static ThreadLocal<Browser> tlBrowser = new ThreadLocal<Browser>();
 	private static ThreadLocal<BrowserContext> tlBrowserContext = new ThreadLocal<BrowserContext>();
@@ -46,18 +49,17 @@ public class PlaywrightFactory {
 	public Page initBrowser(Properties prop) {
 
 		String browserName = prop.getProperty("browser").trim();
-		
+
+
 		String headlessModeStr = prop.getProperty("headless").trim();
-		
-		boolean headlessModeVal=true;
-		
-		if( headlessModeStr.equalsIgnoreCase("false")){
-			
-			headlessModeVal=false;
+
+		boolean headlessModeVal = true;
+
+		if (headlessModeStr.equalsIgnoreCase("false")) {
+
+			headlessModeVal = false;
 		}
-		
-		
-		
+
 		System.out.println("browser name is : " + browserName);
 
 		// playwright = Playwright.create();
@@ -65,22 +67,25 @@ public class PlaywrightFactory {
 
 		switch (browserName.toLowerCase()) {
 		case "chromium":
-			tlBrowser.set(getPlaywright().chromium().launch(new BrowserType.LaunchOptions().setHeadless(headlessModeVal)));
+			tlBrowser.set(
+					getPlaywright().chromium().launch(new BrowserType.LaunchOptions().setHeadless(headlessModeVal)));
 			break;
 		case "firefox":
-			tlBrowser.set(getPlaywright().firefox().launch(new BrowserType.LaunchOptions().setHeadless(headlessModeVal)));
+			tlBrowser.set(
+					getPlaywright().firefox().launch(new BrowserType.LaunchOptions().setHeadless(headlessModeVal)));
 			break;
 		case "safari":
-			tlBrowser.set(getPlaywright().webkit().launch(new BrowserType.LaunchOptions().setHeadless(headlessModeVal)));
+			tlBrowser
+					.set(getPlaywright().webkit().launch(new BrowserType.LaunchOptions().setHeadless(headlessModeVal)));
 			break;
 		case "chrome":
-			tlBrowser.set(
-					getPlaywright().chromium().launch(new LaunchOptions().setChannel("chrome").setHeadless(headlessModeVal)));
+			tlBrowser.set(getPlaywright().chromium()
+					.launch(new LaunchOptions().setChannel("chrome").setHeadless(headlessModeVal)));
 			break;
 		case "edge":
-			tlBrowser.set(
-					getPlaywright().chromium().launch(new LaunchOptions().setChannel("msedge").setHeadless(headlessModeVal)));
-			break;	
+			tlBrowser.set(getPlaywright().chromium()
+					.launch(new LaunchOptions().setChannel("msedge").setHeadless(headlessModeVal)));
+			break;
 
 		default:
 			System.out.println("please pass the right browser name......");
@@ -100,18 +105,12 @@ public class PlaywrightFactory {
 	public Properties init_prop() {
 
 		try {
-			FileInputStream configFis = new FileInputStream("./src/test/resources/config/config.properties");
-			prop = new Properties();
-			prop.load(configFis);
+			prop = propertyUtills.getProperties("./src/test/resources/config/config.properties");
 			String env = prop.getProperty("env");
-			if (env==null)
-				env ="QA";
-			FileInputStream envFis = new FileInputStream("./src/test/resources/env/"+ env.toUpperCase() + ".properties");
-			prop.load(envFis);
-			
-			
-			
-			
+			if (env == null)
+				env = "QA";
+			prop = propertyUtills.getProperties(prop, "./src/test/resources/env/" + env.toUpperCase() + ".properties");
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -129,11 +128,12 @@ public class PlaywrightFactory {
 
 	public static String takeScreenshot() {
 		String path = System.getProperty("user.dir") + "/screenshot/" + System.currentTimeMillis() + ".png";
-		//getPage().screenshot(new Page.ScreenshotOptions().setPath(Paths.get(path)).setFullPage(true));
-		
+		// getPage().screenshot(new
+		// Page.ScreenshotOptions().setPath(Paths.get(path)).setFullPage(true));
+
 		byte[] buffer = getPage().screenshot(new Page.ScreenshotOptions().setPath(Paths.get(path)).setFullPage(true));
 		String base64Path = Base64.getEncoder().encodeToString(buffer);
-		
+
 		return base64Path;
 	}
 

@@ -20,6 +20,7 @@ public class LoginPageTest extends BaseTest {
 		loginPage = new LoginPage(page);
 		boolean status = loginPage.login(prop.getProperty("username"),prop.getProperty("password"));
 		Assert.assertTrue(status);
+		logger.info("AUT Login was successfull");
 	}
 	
 	@DataProvider(name = "logindata")
