@@ -7,9 +7,8 @@
 
 	</listeners>
 	<test thread-count="5" name="Test">
-		<classes>
-			<class name="tests.LoginPageTest" />
-			<class name="base.BaseTest" />
-		</classes>
+		<packages>
+            <package name="tests"/>
+        </packages>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

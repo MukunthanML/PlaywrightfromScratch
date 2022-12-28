@@ -13,3 +13,5 @@ allure open allure-report
 
 
 allure serve allure-results
+
+mvn clean test -DsuiteXmlFile=testng.xml 
