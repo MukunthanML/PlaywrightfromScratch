@@ -130,6 +130,9 @@ public class PlaywrightFactory {
 				+ ".png";
 		//getPage().screenshot(new Page.ScreenshotOptions().setPath(Paths.get(path)).setFullPage(true));
 
+				// getPage().screenshot(new
+				// Page.ScreenshotOptions().setPath(Paths.get(path)).setFullPage(true));
+
 		byte[] buffer = getPage().screenshot(new Page.ScreenshotOptions().setPath(Paths.get(path)).setFullPage(true));
 		String base64Path = Base64.getEncoder().encodeToString(buffer);
 
