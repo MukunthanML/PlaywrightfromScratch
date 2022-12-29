@@ -11,7 +11,7 @@ import com.microsoft.playwright.Page;
 
 import factory.PlaywrightFactory;
 
-public class BaseTest {
+public class Base {
 
 	PlaywrightFactory pf;
 	protected Page page;
@@ -26,7 +26,7 @@ public class BaseTest {
 
 		page = pf.initBrowser(prop);
 
-		logger = LoggerFactory.getLogger(BaseTest.class);
+		logger = LoggerFactory.getLogger(Base.class);
 		logger.info("Playwright Automation Logger started");
 		logger.info(prop.getProperty("browser") + " browser was selected");
 

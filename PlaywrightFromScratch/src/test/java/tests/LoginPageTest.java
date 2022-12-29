@@ -4,13 +4,13 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import base.BaseTest;
+import base.Base;
 import pages.LoginPage;
 import utills.ExcelUtills;
 
 
 
-public class LoginPageTest extends BaseTest {
+public class LoginPageTest extends Base {
 	
 	LoginPage loginPage; 
 	ExcelUtills excelUtills;

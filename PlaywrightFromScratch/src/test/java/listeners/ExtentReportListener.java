@@ -19,7 +19,7 @@ import static factory.PlaywrightFactory.takeScreenshot;
 
 public class ExtentReportListener implements ITestListener {
 
-	private static final String OUTPUT_FOLDER = "./src/test/resources/reports/html/";
+	private static final String OUTPUT_FOLDER = "./target/reports/html/";
 	private static final String FILE_NAME = "TestExecutionReport.html";
 
 	private static ExtentReports extent = init();
