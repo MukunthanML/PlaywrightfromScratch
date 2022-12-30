@@ -3,7 +3,9 @@
 <suite name="Suite">
 
 	<listeners>
+
 		<listener class-name="listeners.ExtentReportListener" />
+<listener class-name="listeners.JyperionListener" />
 
 	</listeners>
 	<test thread-count="5" name="Test">
