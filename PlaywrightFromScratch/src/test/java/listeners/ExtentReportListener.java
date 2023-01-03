@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
@@ -15,6 +17,9 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+
+import utills.WordUtills;
+
 import static factory.PlaywrightFactory.takeScreenshot;
 
 public class ExtentReportListener implements ITestListener {
@@ -93,19 +98,27 @@ public class ExtentReportListener implements ITestListener {
 	public synchronized void onTestSuccess(ITestResult result) {
 //		System.out.println((result.getMethod().getMethodName() + " passed!"));
 		test.get().pass("Test passed");
-		test.get().pass(result.getThrowable(), MediaEntityBuilder.createScreenCaptureFromBase64String(takeScreenshot(),result.getMethod().getMethodName()).build());
+		test.get().pass(result.getThrowable(), MediaEntityBuilder.createScreenCaptureFromBase64String(takeScreenshot()[0],result.getMethod().getMethodName()).build());
+		
+		try {
+			WordUtills.addImage("./target/reports/WordReport/TestReportWord"+LocalDate.now()+"_"+System.currentTimeMillis()+".docx", takeScreenshot()[1]);
+		} catch (InvalidFormatException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		test.get().getModel().setEndTime(getTime(result.getEndMillis()));
 	}
 
 	public synchronized void onTestFailure(ITestResult result) {
 //		System.out.println((result.getMethod().getMethodName() + " failed!"));
-		test.get().fail(result.getThrowable(), MediaEntityBuilder.createScreenCaptureFromBase64String(takeScreenshot(),result.getMethod().getMethodName()).build());
+		test.get().fail(result.getThrowable(), MediaEntityBuilder.createScreenCaptureFromBase64String(takeScreenshot()[0],result.getMethod().getMethodName()).build());
 		test.get().getModel().setEndTime(getTime(result.getEndMillis()));
 	}
 
 	public synchronized void onTestSkipped(ITestResult result) {
 //		System.out.println((result.getMethod().getMethodName() + " skipped!"));
-		test.get().skip(result.getThrowable(), MediaEntityBuilder.createScreenCaptureFromBase64String(takeScreenshot(), result.getMethod().getMethodName()).build());
+		test.get().skip(result.getThrowable(), MediaEntityBuilder.createScreenCaptureFromBase64String(takeScreenshot()[0], result.getMethod().getMethodName()).build());
 		test.get().getModel().setEndTime(getTime(result.getEndMillis()));
 	}
 
